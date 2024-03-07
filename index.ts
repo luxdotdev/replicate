@@ -1,13 +1,14 @@
 import { $ } from "bun";
 
 // Create a backup of the production database
-const { stderr } =
-  await $`pg_dump --disable-triggers -v -a -d "${process.env.PROD_DB_URL}" -f /verceldb_dump.sql`;
+const output =
+  await $`pg_dump --disable-triggers -v -a -d "${process.env.PROD_DB_URL}" -f /verceldb_dump.sql`.text();
 
-if (stderr) {
+if (output.includes("error")) {
   // Stop the process if there was an error
   // We do not want to continue if the backup failed
   // because we will be clearing the replica database
+  console.log("Backup failed");
   process.exit(1);
 }
 
