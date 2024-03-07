@@ -2,9 +2,11 @@ import { $ } from "bun";
 
 // Create a backup of the production database
 const output =
-  await $`pg_dump --disable-triggers -v -a -d "${process.env.PROD_DB_URL}" -f /verceldb_dump.sql`.text();
+  await $`pg_dump --disable-triggers -v -a -d "${process.env.PROD_DB_URL}" -f /verceldb_dump.sql`;
 
-if (output.includes("error")) {
+const backup = Bun.file("/verceldb_dump.sql");
+
+if (backup.size === 0) {
   // Stop the process if there was an error
   // We do not want to continue if the backup failed
   // because we will be clearing the replica database
