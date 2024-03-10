@@ -1,8 +1,7 @@
 import { $ } from "bun";
 
 // Create a backup of the production database
-const output =
-  await $`pg_dump --disable-triggers -v -a -d "${process.env.PROD_DB_URL}" -f /verceldb_dump.sql`;
+await $`pg_dump --disable-triggers -v -a -d "${process.env.PROD_DB_URL}" -f /verceldb_dump.sql`;
 
 const backup = Bun.file("/verceldb_dump.sql");
 
